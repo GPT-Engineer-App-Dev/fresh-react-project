@@ -27,6 +27,7 @@ Events // table: events
     description: string
     venue_id: number
     is_pinned: boolean
+    is_starred: boolean
 
 Comments // table: comments
     id: number
@@ -101,6 +102,21 @@ export const useDeleteEvent = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (eventId) => fromSupabase(supabase.from('events').delete().eq('id', eventId)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('events');
+        },
+    });
+};
+
+export const useToggleStarEvent = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (eventId) => {
+            const { data: event, error } = await supabase.from('events').select('is_starred').eq('id', eventId).single();
+            if (error) throw new Error(error.message);
+            const updatedEvent = { is_starred: !event.is_starred };
+            return fromSupabase(supabase.from('events').update(updatedEvent).eq('id', eventId));
+        },
         onSuccess: () => {
             queryClient.invalidateQueries('events');
         },

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, Input, FormControl, FormLabel, useToast } from '@chakra-ui/react';
-import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent } from '../integrations/supabase/index.js';
+import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, Input, FormControl, FormLabel, useToast, IconButton } from '@chakra-ui/react';
+import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent, useToggleStarEvent } from '../integrations/supabase/index.js';
+import { FaStar, FaRegStar } from 'react-icons/fa';
 
 const Events = () => {
   const { data: events, isLoading, isError } = useEvents();
   const addEvent = useAddEvent();
   const updateEvent = useUpdateEvent();
   const deleteEvent = useDeleteEvent();
+  const toggleStarEvent = useToggleStarEvent();
   const toast = useToast();
 
   const [newEvent, setNewEvent] = useState({ name: '', date: '', description: '', venue_id: '' });
@@ -46,6 +48,15 @@ const Events = () => {
     }
   };
 
+  const handleToggleStarEvent = async (id) => {
+    try {
+      await toggleStarEvent.mutateAsync(id);
+      toast({ title: 'Event star status updated', status: 'success' });
+    } catch (error) {
+      toast({ title: 'Error updating star status', status: 'error' });
+    }
+  };
+
   if (isLoading) return <Box>Loading...</Box>;
   if (isError) return <Box>Error loading events</Box>;
 
@@ -70,12 +81,13 @@ const Events = () => {
             <Th>Date</Th>
             <Th>Description</Th>
             <Th>Venue ID</Th>
+            <Th>Star</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
         <Tbody>
           {events.map((event) => (
-            <Tr key={event.id}>
+            <Tr key={event.id} bg={event.is_starred ? 'yellow.100' : 'white'}>
               <Td>
                 {editingEvent?.id === event.id ? (
                   <Input
@@ -119,6 +131,13 @@ const Events = () => {
                 ) : (
                   event.venue_id
                 )}
+              </Td>
+              <Td>
+                <IconButton
+                  icon={event.is_starred ? <FaStar /> : <FaRegStar />}
+                  onClick={() => handleToggleStarEvent(event.id)}
+                  aria-label="Star Event"
+                />
               </Td>
               <Td>
                 {editingEvent?.id === event.id ? (
