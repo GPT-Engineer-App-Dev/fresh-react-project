@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, Input, FormControl, FormLabel, useToast } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent } from '../integrations/supabase/index.js';
 
 const Events = () => {
@@ -84,7 +85,7 @@ const Events = () => {
                     onChange={(e) => setEditingEvent({ ...editingEvent, name: e.target.value })}
                   />
                 ) : (
-                  event.name
+                  <Link to={`/events/${event.id}`}>{event.name}</Link>
                 )}
               </Td>
               <Td>
