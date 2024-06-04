@@ -108,6 +108,21 @@ export const useDeleteEvent = () => {
     });
 };
 
+export const useToggleStarEvent = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (eventId) => {
+            const { data: event, error } = await supabase.from('events').select('is_starred').eq('id', eventId).single();
+            if (error) throw new Error(error.message);
+            const updatedEvent = { is_starred: !event.is_starred };
+            return fromSupabase(supabase.from('events').update(updatedEvent).eq('id', eventId));
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries('events');
+        },
+    });
+};
+
 // Hooks for comments table
 export const useComments = () => useQuery({
     queryKey: ['comments'],
