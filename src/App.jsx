@@ -3,6 +3,7 @@ import Index from "./pages/Index.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import Events from "./pages/Events.jsx";
+import EventDetail from "./pages/EventDetail.jsx";
 import Navbar from "./components/Navbar.jsx";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route exact path="/about" element={<About />} />
         <Route exact path="/contact" element={<Contact />} />
         <Route exact path="/events" element={<Events />} />
+        <Route exact path="/events/:id" element={<EventDetail />} />
       </Routes>
     </Router>
   );

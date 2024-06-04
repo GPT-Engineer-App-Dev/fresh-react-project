@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Table, Tbody, Td, Th, Thead, Tr, Input, FormControl, FormLabel, useToast, IconButton } from '@chakra-ui/react';
 import { useEvents, useAddEvent, useUpdateEvent, useDeleteEvent, useToggleStarEvent } from '../integrations/supabase/index.js';
 import { FaStar, FaRegStar } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Events = () => {
   const { data: events, isLoading, isError } = useEvents();
@@ -96,7 +97,7 @@ const Events = () => {
                     onChange={(e) => setEditingEvent({ ...editingEvent, name: e.target.value })}
                   />
                 ) : (
-                  event.name
+                  <Link to={`/events/${event.id}`}>{event.name}</Link>
                 )}
               </Td>
               <Td>

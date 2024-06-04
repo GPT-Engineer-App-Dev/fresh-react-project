@@ -123,6 +123,11 @@ export const useToggleStarEvent = () => {
     });
 };
 
+export const useEvent = (id) => useQuery({
+    queryKey: ['event', id],
+    queryFn: () => fromSupabase(supabase.from('events').select('*').eq('id', id).single()),
+});
+
 // Hooks for comments table
 export const useComments = () => useQuery({
     queryKey: ['comments'],
