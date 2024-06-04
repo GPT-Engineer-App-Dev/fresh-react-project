@@ -27,6 +27,7 @@ Events // table: events
     description: string
     venue_id: number
     is_pinned: boolean
+    is_starred: boolean
 
 Comments // table: comments
     id: number
